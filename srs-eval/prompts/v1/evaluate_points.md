@@ -1,0 +1,89 @@
+You are a professional requirements document evaluation expert. Your task is to: Based on the given **checkpoint list**, verify each item against the **document content to be evaluated**, determine whether the document explicitly contains these checkpoints, and output structured results.
+
+### Evaluation Principles
+
+1. **Item-by-item verification**: Every checkpoint in the checkpoint list must be evaluated.
+2. **Objective and verifiable**: Judgments must be strictly based on whether there are **explicit, locatable relevant statements** in the "document content to be evaluated", and must not be subjectively inferred or supplemented.
+3. **Complete coverage**: All checkpoints must appear in the output results, regardless of whether relevant content is found in the document.
+4. **Index numbering**: Index numbers in the output start from `0` and increment sequentially according to the order of checkpoints in the list.
+5. **Judgment rationale**: Must briefly explain, **must explicitly mention the specific content of the checkpoint**, cannot use vague expressions like "this checkpoint", "xxx checkpoint":
+   
+   * If found: Explicitly state the specific content of the checkpoint and explain the relevant information found in the document (you can summarize the location or key points of the content).
+   * If not found: Explicitly state the specific content of the checkpoint and explain "No explicit description directly related to [specific checkpoint content] was found in the document".
+   
+   **Examples**:
+   - Wrong: `No explicit description directly related to this checkpoint was found in the document`
+   - Correct: `No explicit description directly related to "support user login functionality" was found in the document`
+   - Correct: `No explicit description supporting user login functionality was found in the document`
+6. **Binary judgment**:
+   
+   * Use `yes` to indicate that explicit content corresponding to the checkpoint was found in the document;
+   * Use `no` to indicate that corresponding content was not found.
+7. **Information source limitation**: Only use the content provided in `document content to be evaluated` for judgment, and do not reference external common knowledge or experience.
+
+### Output Format Requirements (Important! Must strictly comply)
+
+**WARNING: Format requirements are mandatory, any deviation will cause parsing to fail!**
+
+1. **Must wrap TSV output in code blocks**, format as follows:
+   
+   ```tsv
+   Index	Reason	Result
+   0	The document explicitly describes content related to "support user registration functionality" including form validation and user information storage	yes
+   1	No explicit description directly related to "support user login functionality" was found in the document	no
+   ```
+
+2. **TSV format requirements**:
+   - Use **tab character** as column separator (NOT comma, NOT space)
+   - **The first line must be the header**, and must be exactly (must be completely consistent, no variations): `Index	Reason	Result` (tabs between columns)
+   - **Starting from the second line, each line must contain three columns**, separated by tabs, corresponding to one checkpoint in the checkpoint list
+
+3. **Column requirements**:
+   * **First column - Index**: Integer starting from `0`, incrementing sequentially according to checkpoint order (0, 1, 2, 3, ...).
+   * **Second column - Reason**: Brief explanation in English of findings in the document, or reason for not finding. **You can freely use commas, semicolons, and other punctuation in this column** - tabs are only used as column separators.
+   * **Third column - Result**: **Must** be `yes` or `no` (lowercase, no quotes, no spaces). **This column must absolutely not be omitted, cannot be empty, and cannot be other values!**
+
+4. **Format example** (please strictly follow this format for output, note that the reason must explicitly mention the specific content of the checkpoint):
+   
+   ```tsv
+   Index	Reason	Result
+   0	The document explicitly describes content related to "support user registration functionality", including form validation and user information storage	yes
+   1	No explicit description directly related to "support user login functionality" was found in the document	no
+   2	The document explicitly describes API functions like `coem_send_data` and `coem_receive_data` for data transmission	yes
+   ```
+
+5. **Key requirements**:
+   - **Must wrap the entire TSV content in ```tsv code blocks**
+   - Each line must have three columns, separated by **tab characters** (NOT commas)
+   - The third column must be `yes` or `no`, cannot be omitted
+   - Must cover all checkpoints, no omissions or merging allowed
+   - Index must start from 0 and increment continuously
+   - **The reason must explicitly mention the specific content of the checkpoint**, cannot use vague expressions like "this checkpoint", "xxx checkpoint"
+   - **Reason column can contain commas, semicolons, and any punctuation** - only tabs are used as separators
+   - Do not repeat words like "Reason" at the end of the reason
+   - Do not use commas as column separators
+   - Do not omit the Result column
+   - Do not use vague expressions like "this checkpoint", "with xxx checkpoint" in the output
+   - The output must not contain any additional text explanations, blank lines, or comments outside the code blocks
+
+6. **Pre-output check**: Before outputting, please confirm:
+   - Use ```tsv code blocks to wrap
+   - The first line is the header: `Index	Reason	Result` (with tabs)
+   - Each line has three columns, separated by tabs (NOT commas)
+   - The third column is `yes` or `no`
+   - Index starts from 0 and increments continuously
+   - **The reason explicitly mentions the specific content of the checkpoint**, no vague expressions like "this checkpoint" are used
+   - No blank lines, no additional explanatory text
+
+### Task
+
+Please evaluate the given checkpoint list and document content to be evaluated according to the above requirements, **use ```tsv code blocks to wrap the final TSV table content**, and do not output any other text explanations or comments.
+
+[Checkpoint List]
+```tsv
+Index	Checkpoint
+{checkpoints_table}
+```
+
+[Document Content to be Evaluated]
+{target_content}

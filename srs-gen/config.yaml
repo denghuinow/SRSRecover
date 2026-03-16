@@ -1,0 +1,80 @@
+# 多版本 SRS 生成器配置文件
+
+# OpenAI API 配置
+openai:
+  # API 密钥（优先从环境变量 OPENAI_API_KEY 读取，如果环境变量未设置则从此处读取）
+  api_key: ""  # 如果为空，将从环境变量读取
+  # API 基础 URL（优先从环境变量 OPENAI_BASE_URL 读取，如果环境变量未设置则从此处读取）
+  base_url: null  # 例如: "https://api.openai.com/v1" 或 "http://172.17.0.1:3000/v1"
+  
+  # Chat 模型配置
+  chat:
+    model: "deepseek-chat"  # 默认使用的 Chat 模型
+    temperature: 1.0  # 温度参数
+    max_tokens: 8192  # 可选，None 时使用 API 默认值
+    max_continuations: 0  # 最大接续次数（当响应被截断时）
+  
+  # Embedding 模型配置
+  embedding:
+    model: "Qwen/Qwen3-Embedding-0.6B"  # 默认使用的 Embedding 模型
+  
+  # OpenAI API 调用重试设置
+  retry:
+    max_attempts: 5       # 单次 API 调用最大重试次数
+    base_delay: 2.0       # 第一次重试的等待时间（秒），之后指数退避
+    max_delay: 30.0       # 单次等待时间上限（秒）
+  
+  # 各组件独立的模型和温度配置（如果未指定，则使用 chat 的默认值）
+  components:
+    split_to_semantic_units:
+      model: null  # 如果为 null，则使用 chat.model
+      temperature: null  # 如果为 null，则使用 chat.temperature
+      max_tokens: null  # 如果为 null，则使用 chat.max_tokens
+      max_continuations: null  # 如果为 null，则使用 chat.max_continuations
+    requirement_explorer:
+      model: null
+      temperature: null
+      max_tokens: null
+      max_continuations: null
+    requirement_clarifier:
+      model: deepseek-reasoner
+      temperature: null
+      max_tokens: 32768
+      max_continuations: null
+    srs_generator:
+      model: null
+      temperature: null
+      max_tokens: null
+      max_continuations: null
+
+# 迭代参数配置
+iteration:
+  # 每轮探索新需求的比例（相对于基线单元数量）
+  rho: 1.0
+  # 最大外循环次数（每轮生成一版 SRS）
+  max_outer_iter: 5
+  # 最大内循环次数（每轮内尝试探索新需求的次数）
+  max_inner_iter: 10
+  # 是否跳过 requirement_improver（后续轮次的需求改进步骤）
+  skip_requirement_improver: true
+
+# 相似度过滤配置
+similarity:
+  # 相似度阈值（0-1），超过此值视为"太像"，会被过滤
+  threshold: 0.8
+
+# 日志配置
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+# 提示词配置
+prompt:
+  # 提示词语言（zh 或 en），默认为 en
+  language: "en"
+
+# Token 生成配置
+max_context_length: 131072  # 最大上下文长度
+one_gen_req_token: 8192  # 单次生成需求的目标 token 数
+# maxToken 使用现有的 openai.chat.max_tokens 或 openai.components.requirement_explorer.max_tokens
+

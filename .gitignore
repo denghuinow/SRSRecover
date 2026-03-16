@@ -1,0 +1,12 @@
+.env
+**/.env
+srs-eval/.cursor
+srs-eval/.python-version
+srs-eval/uv.lock
+srs-gen/AGENTS.md
+srs-eval/AGENTS.md
+srs-gen/test/测试命令.sh
+srs-eval/analyze_script
+srs-gen/test/script
+srs-eval/.uv-cache
+srs-eval/.venv
