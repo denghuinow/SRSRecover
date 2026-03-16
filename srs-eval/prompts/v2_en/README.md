@@ -1,1 +1,1 @@
-在v1基础上去掉评分理由字段，需要模型有思考能力。不能用于指令模型，指令模型在去掉理由字段时评分不准确。
+Based on v1 but removes the scoring-reason field; requires the model to have reasoning capability. Not suitable for instruction-tuned-only models—they tend to give inaccurate scores when the reason field is removed.
